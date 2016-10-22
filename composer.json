@@ -3,6 +3,11 @@
     "description": "Transforms structured data between various common formats.",
     "type": "library",
     "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "Tykus\\DataTransformer": "src/"
+        }
+    },
     "authors": [
         {
             "name": "Brian O'Sullivan",
@@ -10,5 +15,8 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "phpunit/phpunit": "^5.6"
+    },
+    "require-dev": {}
 }
