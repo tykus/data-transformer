@@ -1,0 +1,14 @@
+{
+    "name": "tykus/data-transformer",
+    "description": "Transforms structured data between various common formats.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Brian O'Sullivan",
+            "email": "brian@tykus.ie"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
