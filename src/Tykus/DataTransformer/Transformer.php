@@ -20,16 +20,6 @@ class Transformer
         $this->data = $this->getData();
     }
 
-    private function validateFileExists($filename)
-    {
-        if (! file_exists($filename))
-        {
-            throw new FileNotFoundException("The provided filename does not exist.");
-        }
-
-        return $filename;
-    }
-
     public function getImporter()
     {
         return $this->importer;
@@ -51,6 +41,29 @@ class Transformer
         throw new \BadMethodCallException("{get_class($this)} does not respond to {$method}");
     }
 
+    /**
+     * Validate that the provided filename exists
+     *
+     * @param  string $filename
+     * @return string
+     */
+    private function validateFileExists($filename)
+    {
+        if (! file_exists($filename))
+        {
+            throw new FileNotFoundException("The provided filename does not exist.");
+        }
+
+        return $filename;
+    }
+
+    /**
+     * Determine the name of the exporter class to be used and create it
+     *
+     * @param string $format
+     *
+     * @return Tykus\DataTransformer\Exporters\Exporter
+     */
     private function fetchExporter($format)
     {
         $exporter = $format . 'Exporter';
@@ -60,6 +73,12 @@ class Transformer
         return $reflector->newInstance();
     }
 
+
+    /**
+     * Determine the name of the importer class to be used and create it
+     *
+     * @return Tykus\DataTransformer\Importers\Importer
+     */
     private function fetchImporter()
     {
         $format = $this->formatIdentifier->identify($this->filename);
@@ -70,10 +89,14 @@ class Transformer
         return $reflector->newInstanceArgs([$this->filename]);
     }
 
+    /**
+     * Get the data from the importer
+     *
+     * @return Illuminate\Support\Collection
+     */
     private function getData()
     {
-        if (! isset($this->importer))
-        {
+        if (! isset($this->importer)) {
             $this->importer = $this->fetchImporter();
         }
 

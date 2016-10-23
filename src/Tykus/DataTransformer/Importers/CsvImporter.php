@@ -8,9 +8,9 @@ class CsvImporter extends Importer
     /**
      * Extracts the CSV data from the file
      *
-     * @return Illuminate\Support\Collection
+     * @return Array
      */
-    public function readFile()
+    protected function readFile()
     {
         $reader = Reader::createFromPath($this->filename);
         return $reader->fetchAssoc();
