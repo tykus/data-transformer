@@ -1,9 +1,9 @@
 <?php
 namespace Tykus\DataTransformer;
 
+use Tykus\DataTransformer\FormatIdentifier;
 use Tykus\DataTransformer\Exceptions\FileNotFoundException;
 use Tykus\DataTransformer\Exceptions\UnsupportedFormatException;
-use Tykus\DataTransformer\FormatIdentifier;
 
 class Transformer
 {
@@ -11,12 +11,13 @@ class Transformer
     protected $formatIdentifier;
     protected $importer;
     protected $exporter;
+    protected $data;
 
     public function __construct($filename, FormatIdentifier $formatIdentifier)
     {
         $this->filename = $this->validateFileExists($filename);
         $this->formatIdentifier = $formatIdentifier;
-        $this->fetchImporter();
+        $this->data = $this->getData();
     }
 
     private function validateFileExists($filename)
@@ -31,11 +32,6 @@ class Transformer
 
     public function getImporter()
     {
-        if (! isset($this->importer))
-        {
-            return $this->fetchImporter();
-        }
-
         return $this->importer;
     }
 
@@ -72,6 +68,16 @@ class Transformer
         $reflector = new \ReflectionClass("Tykus\\DataTransformer\\Importers\\{$class}");
 
         return $reflector->newInstanceArgs([$this->filename]);
+    }
+
+    private function getData()
+    {
+        if (! isset($this->importer))
+        {
+            $this->importer = $this->fetchImporter();
+        }
+
+        return $this->importer->get();
     }
 
 }

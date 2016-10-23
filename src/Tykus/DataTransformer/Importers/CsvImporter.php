@@ -2,7 +2,6 @@
 namespace Tykus\DataTransformer\Importers;
 
 use League\Csv\Reader;
-use Illuminate\Support\Collection;
 
 class CsvImporter extends Importer
 {
@@ -11,10 +10,10 @@ class CsvImporter extends Importer
      *
      * @return Illuminate\Support\Collection
      */
-    public function get()
+    public function readFile()
     {
         $reader = Reader::createFromPath($this->filename);
-        return Collection::make($reader->fetchAssoc());
+        return $reader->fetchAssoc();
     }
 
 }

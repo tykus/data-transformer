@@ -1,6 +1,8 @@
 <?php
 namespace Tykus\DataTransformer\Importers;
 
+use Illuminate\Support\Collection;
+
 abstract class Importer
 {
     protected $filename;
@@ -10,6 +12,11 @@ abstract class Importer
         $this->filename = $filename;
     }
 
-    abstract public function get();
+    public function get()
+    {
+        return Collection::make($this->readFile());
+    }
+
+    abstract public function readFile();
 
 }
