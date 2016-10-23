@@ -49,10 +49,10 @@ class Transformer
         if (strpos($method, 'to') == 0)
         {
             $format = substr($method, 2);
-            $this->exporter = $this->fetchExporter($format);
+            return $this->exporter = $this->fetchExporter($format);
         }
 
-        return new \BadMethodCallException("{$this->className()} does not respond to {$method}");
+        throw new \BadMethodCallException("{get_class($this)} does not respond to {$method}");
     }
 
     private function fetchExporter($format)
@@ -71,7 +71,7 @@ class Transformer
         $class = ucwords($format) . 'Importer';
         $reflector = new \ReflectionClass("Tykus\\DataTransformer\\Importers\\{$class}");
 
-        return $reflector->newInstanceArgs([$this->filename]);
+        return $reflector->newInstance([$this->filename]);
     }
 
 }
