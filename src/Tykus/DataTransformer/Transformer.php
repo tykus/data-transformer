@@ -71,7 +71,7 @@ class Transformer
         $class = ucwords($format) . 'Importer';
         $reflector = new \ReflectionClass("Tykus\\DataTransformer\\Importers\\{$class}");
 
-        return $reflector->newInstance([$this->filename]);
+        return $reflector->newInstanceArgs([$this->filename]);
     }
 
 }

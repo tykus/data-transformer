@@ -10,6 +10,6 @@ abstract class Importer
         $this->filename = $filename;
     }
 
-    abstract public function read();
+    abstract public function get();
 
 }
