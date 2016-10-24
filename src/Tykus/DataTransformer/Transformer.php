@@ -17,25 +17,55 @@ class Transformer
     {
         $this->filename = $this->validateFileExists($filename);
         $this->formatIdentifier = $formatIdentifier;
-        $this->data = $this->getData();
+        $this->data = $this->fetchData();
     }
 
+    /**
+     * Returns the current Importer instance
+     *
+     * @return Tykus\DataTransformer\Importers\Importer
+     */
     public function getImporter()
     {
         return $this->importer;
     }
 
+    /**
+     * Returns the current Exporter instance
+     *
+     * @return Tykus\DataTransformer\Exporters\Exporter
+     */
     public function getExporter()
     {
         return $this->exporter;
     }
 
+    /**
+     * Transform the data according to the rules provided
+     * @param  callable $callback
+     * @return Illuminate\Support\Collection
+     */
+    public function transform(callable $func)
+    {
+        return $this->data->map(function($row) use ($func) {
+            return $func($row);
+        });
+    }
+
+    /**
+     * Handles calls to undefined methods - for dynamic exports
+     *
+     * @param  string $method
+     * @param  array $args
+     *
+     * @return mixed
+     */
     public function __call($method, $args)
     {
         if (strpos($method, 'to') == 0)
         {
             $format = substr($method, 2);
-            return $this->exporter = $this->fetchExporter($format);
+            return $this->exporter = $this->createExporter($format);
         }
 
         throw new \BadMethodCallException("{get_class($this)} does not respond to {$method}");
@@ -64,13 +94,13 @@ class Transformer
      *
      * @return Tykus\DataTransformer\Exporters\Exporter
      */
-    private function fetchExporter($format)
+    private function createExporter($format)
     {
         $exporter = $format . 'Exporter';
 
         $reflector = new \ReflectionClass("Tykus\\DataTransformer\\Exporters\\{$exporter}");
 
-        return $reflector->newInstance();
+        return $reflector->newInstanceArgs([$this->data]);
     }
 
 
@@ -79,7 +109,7 @@ class Transformer
      *
      * @return Tykus\DataTransformer\Importers\Importer
      */
-    private function fetchImporter()
+    private function createImporter()
     {
         $format = $this->formatIdentifier->identify($this->filename);
 
@@ -94,12 +124,11 @@ class Transformer
      *
      * @return Illuminate\Support\Collection
      */
-    private function getData()
+    private function fetchData()
     {
         if (! isset($this->importer)) {
-            $this->importer = $this->fetchImporter();
+            $this->importer = $this->createImporter();
         }
-
         return $this->importer->get();
     }
 

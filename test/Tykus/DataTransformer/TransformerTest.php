@@ -58,4 +58,33 @@ class TransformerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /** @test */
+    public function it_transforms_data_into_nested_data()
+    {
+        $transformed = $this->transformer->transform(function($row) {
+            return [
+                'item id' => $row['item id'],
+                'description' => $row['description'],
+                'price' => $row['price'],
+                'cost' => $row['cost'],
+                'price_type' => $row['price_type'],
+                'quantity_on_hand' => $row['quantity_on_hand'],
+                'modifiers' => [
+                    [
+                        'name' => $row['modifier_1_name'],
+                        'price' => $row['modifier_1_price']
+                    ],
+                    [
+                        'name' => $row['modifier_2_name'],
+                        'price' => $row['modifier_2_price']
+                    ],
+                    [
+                        'name' => $row['modifier_3_name'],
+                        'price' => $row['modifier_3_price']
+                    ]
+                ]
+            ];
+        });
+    }
+
 }

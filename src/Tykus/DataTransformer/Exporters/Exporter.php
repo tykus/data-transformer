@@ -1,8 +1,26 @@
 <?php
 namespace Tykus\DataTransformer\Exporters;
-use SebastianBergmann\Exporter\Exporter;
 
 abstract class Exporter
 {
-    abstract public function write($filename);
+    protected $data;
+    protected $json;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+        $this->json = $this->write();
+    }
+
+    abstract public function write();
+
+    /**
+     * This object outputs it's JSON data
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->json;
+    }
 }

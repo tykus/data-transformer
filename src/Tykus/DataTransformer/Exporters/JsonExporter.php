@@ -1,8 +1,15 @@
 <?php
 namespace Tykus\DataTransformer\Exporters;
-use SebastianBergmann\Exporter\Exporter;
 
 class JsonExporter extends Exporter
 {
-
+    /**
+     * Writes the data as JSON
+     *
+     * @return string
+     */
+    public function write()
+    {
+        return $this->data->toJson();
+    }
 }
