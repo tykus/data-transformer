@@ -13,8 +13,7 @@ $transformer = new Transformer('./example.csv', new FormatIdentifier('./example.
 # We can be explicit about how the data gets keyed, transformed and nested by
 # defining a closure with the transformation recipe to be applied to each
 # row of the data that was imported from the CSV to the Transformer.
-echo $transformer->toJson();
-/**$data = $transformer->transform(function($row) {
+$data = $transformer->transform(function($row) {
     return [
         'item_id' => $row['item id'],
         'description' => $row['description'],
@@ -37,7 +36,7 @@ echo $transformer->toJson();
             ]
         ]
     ];
-});
+})->toJson();
 
 header('Content-Type: application/json');
-echo json_encode($data);
+echo $data;
